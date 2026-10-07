@@ -2,11 +2,12 @@ import {readdir,readFile} from "node:fs/promises";
 import {join} from "node:path";
 
 const roots=["app","docs","scripts"];
+const tokenPrefixes=["ghp_","github_"+"pat_","sbp_"];
 const forbidden=[
-  /ghp_[A-Za-z0-9_]+/,
-  /github_pat_[A-Za-z0-9_]+/,
-  /sbp_[A-Za-z0-9_]+/,
-  /service_role/i,
+  new RegExp(tokenPrefixes[0]+"[A-Za-z0-9_]+"),
+  new RegExp(tokenPrefixes[1]+"[A-Za-z0-9_]+"),
+  new RegExp(tokenPrefixes[2]+"[A-Za-z0-9_]+"),
+  /service_+"role"/i,
   /-----BEGIN (RSA|EC|OPENSSH|PRIVATE) KEY-----/
 ];
 const allowedExt=new Set([".ts",".tsx",".js",".mjs",".md",".json",".yml",".yaml",".env.example"]);
