@@ -8,8 +8,10 @@ export async function createSupabaseServerClient(){
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {cookies:{
       getAll(){return cookieStore.getAll();},
-      setAll(cookiesToSet: Array<{name:string;value:string;options?:{path?:string;domain?:string;expires?:Date;httpOnly?:boolean;secure?:boolean;sameSite?:"lax"|"strict"|"none";maxAge?:number;priority?:"low"|"medium"|"high"}}>){
-        try{for(const {name,value,options} of cookiesToSet) cookieStore.set(name,value,options);}catch{}
+      setAll(cookiesToSet:unknown[]){
+        for(const item of cookiesToSet as Array<{name:string;value:string;options?:Record<string,unknown>}>){
+          try{cookieStore.set(item.name,item.value,item.options as never);}catch{}
+        }
       }
     }}
   );
