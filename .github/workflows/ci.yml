@@ -44,6 +44,27 @@ jobs:
       - name: Production build
         run: npm run build
 
+      - name: Production startup
+        run: |
+          npm run start > /tmp/awtad-next.log 2>&1 &
+          echo $! > /tmp/awtad-next.pid
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:3000/api/health > /tmp/awtad-health.json; then
+              cat /tmp/awtad-health.json
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/awtad-next.log
+          exit 1
+
+      - name: Production runtime cleanup
+        if: always()
+        run: |
+          if [ -f /tmp/awtad-next.pid ]; then
+            kill "$(cat /tmp/awtad-next.pid)" || true
+          fi
+
       - name: Commit generated lockfile
         run: |
           if [ -f package-lock.json ] && git status --porcelain -- package-lock.json | grep -q .; then
