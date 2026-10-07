@@ -11,7 +11,8 @@
     "lint":"eslint .",
     "typecheck":"tsc --noEmit",
     "test":"node --test",
-    "verify:constitution":"node scripts/verify-constitution.mjs"
+    "verify:constitution":"node scripts/verify-constitution.mjs",
+    "verify:source":"node scripts/verify-source.mjs"
   },
   "dependencies":{
     "next":"16.4.0",
