@@ -1,26 +1,13 @@
 # Phase 0 — Acceptance Contract
 
-الحالة: **PASS**
+الحالة: **INCOMPLETE — LOCKFILE GATE**
 
-Commit المختبر: `476e5ec5180108815cdff179963f69f9aff410b4`
-CI: GitHub Actions `phase-0-gate` run #24
-النتيجة: **success**
+تمت خطوات CI الأساسية بنجاح على commit `476e5ec5180108815cdff179963f69f9aff410b4`، لكن مراجعة المستودع أثبتت أن `package-lock.json` غير موجود في Git. لذلك لا يطابق البناء عقد Phase 0 الذي يشترط lockfile مثبتًا.
 
-## الأدلة
+## الإجراء التصحيحي
 
-- `verify:constitution` — PASS
-- `verify:source` — PASS
-- TypeScript strict / typecheck — PASS
-- ESLint — PASS
-- Node tests — PASS
-- Production build — PASS
-- Production startup + `/api/health` — PASS
-- نفس الـ commit خضع لكل خطوات البوابة.
+تم تحديث CI في commit `f53b5ee749556e5f9ad27fc1b79badc7ce1f9a6b` ليقوم بتوليد lockfile عند غيابه، تثبيته في Git، ثم إعادة البوابة باستخدام `npm ci`.
 
 ## قرار البوابة
 
-Phase 0 مستوفية لمتطلبات بوابة الخروج، ولذلك يسمح الدستور ببدء Phase 1.
-
-## ملاحظة أمنية
-
-ظهرت في سجل تثبيت الاعتمادات رسائل npm عن vulnerabilities أثناء هذا التشغيل. لم تفشل البوابة بسببها، ولا تعتبر هذه الرسائل مغلقة نهائيًا؛ يجب تقييمها ومعالجة النتائج المؤثرة ضمن دورة الأمن في Phase 1 قبل إعلان Phase 1 PASS.
+Phase 0 **لم تُغلق بعد**. لا يبدأ تنفيذ Phase 1 حتى ينجح CI على commit يحتوي `package-lock.json` فعليًا وتُثبت جميع بنود العقد على نفس النسخة.
