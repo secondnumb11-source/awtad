@@ -15,11 +15,10 @@
 
 ## الحالة
 
-**Phase 0 — PASS**
+**Phase 0 — INCOMPLETE**
 
-Commit بوابة Phase 0:
-`476e5ec5180108815cdff179963f69f9aff410b4`
+سبب الإيقاف الحالي: `package-lock.json` غير مثبت في Git، ولذلك لم يتحقق شرط بوابة Phase 0 كاملًا.
 
-**Phase 1 — IN PROGRESS**
+**Phase 1 — DESIGN READY / NOT STARTED**
 
-لا تعتبر Phase 1 مكتملة قبل اجتياز بوابتها الفعلية على نفس النسخة.
+تم إعداد عقد القبول والقرار المعماري فقط. لا يبدأ التنفيذ قبل إغلاق Phase 0.
