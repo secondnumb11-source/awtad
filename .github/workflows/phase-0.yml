@@ -17,12 +17,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22.x"
-          cache: npm
       - name: Bootstrap lockfile
         if: ${{ hashFiles('package-lock.json') == '' }}
         run: npm install --package-lock-only --ignore-scripts
       - name: Commit bootstrapped lockfile
-        if: ${{ hashFiles('package-lock.json') == '' }}
+        if: ${{ github.event_name == 'push' && hashFiles('package-lock.json') == '' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
