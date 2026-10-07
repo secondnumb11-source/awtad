@@ -5,6 +5,8 @@ on:
     branches: ["rebuild/**"]
     paths-ignore:
       - "package-lock.json"
+  pull_request:
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
