@@ -1,0 +1,56 @@
+name: phase-0-gate
+
+on:
+  push:
+    branches: ["rebuild/zero-start"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: write
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.16.0"
+          cache: npm
+      - name: Generate lockfile on first run
+        if: hashFiles('package-lock.json') == ''
+        run: |
+          npm install --package-lock-only --ignore-scripts
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          git commit -m "chore: pin phase-0 dependency lockfile"
+          git push
+          echo "LOCKFILE_COMMITTED=true" >> "$GITHUB_ENV"
+      - name: Stop first run after lockfile commit
+        if: env.LOCKFILE_COMMITTED == 'true'
+        run: exit 0
+      - run: npm ci
+      - run: npm run verify:constitution
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - name: Start production server
+        run: |
+          npm run start > /tmp/awtad.log 2>&1 &
+          echo $! > /tmp/awtad.pid
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:3000/api/health > /tmp/health.json; then
+              cat /tmp/health.json
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/awtad.log
+          exit 1
+      - name: Stop production server
+        if: always()
+        run: |
+          if [ -f /tmp/awtad.pid ]; then kill "$(cat /tmp/awtad.pid)" || true; fi
