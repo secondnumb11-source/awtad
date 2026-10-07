@@ -3,14 +3,13 @@
 الدستور الملزم لجميع المراحل: `docs/engineering-constitution.md`.
 
 ## Phase 0 — Foundation
-الحالة: INCOMPLETE/UNVERIFIED حتى يثبت كل شرط الدستور على commit محدد.
+الحالة: PASS على commit `2f6ebbd54c6c1aeda1c27f543ad48d9786ebcf36` وفق CI run #50: dependencies, constitution, foundation, core, TypeScript, lint, production build, production startup, وhealth check نجحت.
 
 ## Phase 1 — Source & requirements baseline
-الحالة: INCOMPLETE/UNVERIFIED حتى يثبت كل شرط الدستور على commit محدد.
-تمت مراجعة مواصفات أوتاد، موقع جسر، ومواد الدوام/التحكم/المديرين/الإشعارات، لكن المراجعة المصدرية وحدها لا تكفي لإغلاق مرحلة هندسية.
+الحالة: PASS كمراجعة مصدرية/متطلبات؛ لا تُعامل كمصادقة تشغيلية على المنتج. تمت مراجعة مواصفات أوتاد، موقع جسر، ومواد الدوام/التحكم/المديرين/الإشعارات، وتجميعها في feature matrix.
 
 ## Phase 2 — Identity, tenancy & Core HR
-الحالة: INCOMPLETE/UNVERIFIED حتى تكتمل بوابة الدستور على نفس commit.
+الحالة: INCOMPLETE/UNVERIFIED. الكود والبنية الأساسية موجودان، لكن التكامل النظيف مع قاعدة اختبار، RLS/security audit، API smoke tests وE2E لم تُغلق بعد.
 - Supabase Auth boundary.
 - multi-tenant organization/entity/branch/department/location.
 - employee master record.
