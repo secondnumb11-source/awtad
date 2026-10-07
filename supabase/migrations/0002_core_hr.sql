@@ -111,3 +111,18 @@ create policy user_roles_access on user_roles for all to authenticated using (ro
 create policy manager_groups_org on manager_groups for all to authenticated using (organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active)) with check (organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active));
 create policy manager_group_members_access on manager_group_members for all to authenticated using (group_id in (select id from manager_groups where organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active))) with check (group_id in (select id from manager_groups where organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active)));
 create policy employee_change_requests_org on employee_change_requests for all to authenticated using (organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active)) with check (organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active));
+
+
+-- Tighten the foundation policies inherited from migration 0001.
+drop policy if exists employees_isolation on employees;
+create policy employees_org on employees for all to authenticated
+  using (organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active))
+  with check (organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active));
+
+drop policy if exists audit_logs_isolation on audit_logs;
+create policy audit_logs_org on audit_logs for select to authenticated
+  using (organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active));
+
+-- permissions are internal authorization metadata; expose only through authenticated access.
+alter table permissions enable row level security;
+create policy permissions_authenticated_read on permissions for select to authenticated using (true);
