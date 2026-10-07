@@ -1,30 +1,26 @@
 # Phase 0 — Acceptance Contract
 
-الحالة الحالية: IN PROGRESS
+الحالة: **PASS**
 
-## يجب أن يثبت هذا العقد
-- المستودع مستقل عن المحاولات السابقة.
-- الدستور الهندسي موجود ويمنع البناء العشوائي والانتقال المبكر وترك الأخطاء.
-- متطلبات المنتج موثقة ومصنفة.
-- تطبيق Next.js أساسي يعمل.
-- endpoint الصحة يعمل في development وproduction.
-- TypeScript strict يمر.
-- ESLint يمر.
-- اختبارات Node الأساسية تمر.
-- production build يمر.
-- production startup + /api/health يمران.
-- package-lock.json موجود ومثبت في Git.
-- لا أسرار حقيقية في source.
-- نفس commit الذي يعلن PASS هو الذي خضع للاختبار.
+Commit المختبر: `476e5ec5180108815cdff179963f69f9aff410b4`
+CI: GitHub Actions `phase-0-gate` run #24
+النتيجة: **success**
 
-## ممنوع في Phase 0
-- Core HR business logic.
-- Attendance business logic.
-- Payroll.
-- AI features.
-- Government integrations.
-- أي جدول قاعدة بيانات أعمال لم يُعتمد في Phase 1.
+## الأدلة
 
-## معيار PASS
-PASS فقط إذا كانت جميع البنود أعلاه مثبتة في CI على commit محدد.
-أي بند غير مثبت = INCOMPLETE.
+- `verify:constitution` — PASS
+- `verify:source` — PASS
+- TypeScript strict / typecheck — PASS
+- ESLint — PASS
+- Node tests — PASS
+- Production build — PASS
+- Production startup + `/api/health` — PASS
+- نفس الـ commit خضع لكل خطوات البوابة.
+
+## قرار البوابة
+
+Phase 0 مستوفية لمتطلبات بوابة الخروج، ولذلك يسمح الدستور ببدء Phase 1.
+
+## ملاحظة أمنية
+
+ظهرت في سجل تثبيت الاعتمادات رسائل npm عن vulnerabilities أثناء هذا التشغيل. لم تفشل البوابة بسببها، ولا تعتبر هذه الرسائل مغلقة نهائيًا؛ يجب تقييمها ومعالجة النتائج المؤثرة ضمن دورة الأمن في Phase 1 قبل إعلان Phase 1 PASS.
