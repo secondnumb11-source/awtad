@@ -22,10 +22,16 @@ jobs:
           package-manager-cache: false
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Engineering constitution
+        run: npm run verify:constitution
 
       - name: Foundation verification
         run: npm run verify:foundation
+
+      - name: Core verification
+        run: npm run verify:core
 
       - name: TypeScript
         run: npm run typecheck
