@@ -1,14 +1,16 @@
 # خطة البناء
 
+الدستور الملزم لجميع المراحل: `docs/engineering-constitution.md`.
+
 ## Phase 0 — Foundation
-حالة: مكتملة ومتحقق منها في CI/runtime.
+الحالة: INCOMPLETE/UNVERIFIED حتى يثبت كل شرط الدستور على commit محدد.
 
 ## Phase 1 — Source & requirements baseline
-حالة: مكتملة.
-تمت مراجعة مواصفات أوتاد، موقع جسر، ومواد الدوام/التحكم/المديرين/الإشعارات.
+الحالة: INCOMPLETE/UNVERIFIED حتى يثبت كل شرط الدستور على commit محدد.
+تمت مراجعة مواصفات أوتاد، موقع جسر، ومواد الدوام/التحكم/المديرين/الإشعارات، لكن المراجعة المصدرية وحدها لا تكفي لإغلاق مرحلة هندسية.
 
 ## Phase 2 — Identity, tenancy & Core HR
-الحالة الحالية.
+الحالة: INCOMPLETE/UNVERIFIED حتى تكتمل بوابة الدستور على نفس commit.
 - Supabase Auth boundary.
 - multi-tenant organization/entity/branch/department/location.
 - employee master record.
@@ -39,4 +41,4 @@
 ## Phase 10 — Analytics/AI/integrations
 ## Phase 11 — Mobile + E2E + security hardening
 
-كل مرحلة لا تُغلق إلا بعد بوابة الجودة المعرفة في docs/quality-gates.md.
+لا تُغلق أي مرحلة إلا بحالة PASS وفق الدستور، مع تسجيل commit SHA ونتائج جميع البوابات.
