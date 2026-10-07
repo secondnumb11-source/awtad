@@ -1,5 +1,5 @@
 import {readFileSync,readdirSync,statSync} from "node:fs";
-import {join} from "node:path";
+import {join,relative} from "node:path";
 
 const root=new URL("..",import.meta.url).pathname;
 const required=["package.json","tsconfig.json","next-env.d.ts",".env.example","app/page.tsx","app/api/health/route.ts","middleware.ts","src/domain/employee.ts","src/domain/payroll.ts","src/domain/workflow.ts","src/security/tenant.ts"];
@@ -11,7 +11,11 @@ function walk(dir){
     if(["node_modules",".next",".git"].includes(entry.name)) continue;
     const path=join(dir,entry.name);
     if(entry.isDirectory()) walk(path);
-    else if(forbidden.test(readFileSync(path,"utf8"))) throw new Error("Potential secret detected in "+path);
+    else {
+      const rel=relative(root,path);
+      if(rel==="scripts/verify-foundation.mjs") continue;
+      if(forbidden.test(readFileSync(path,"utf8"))) throw new Error("Potential secret detected in "+rel);
+    }
   }
 }
 walk(root);
