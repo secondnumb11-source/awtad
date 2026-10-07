@@ -1,0 +1,30 @@
+{
+  "name":"awtad",
+  "version":"0.1.0",
+  "private":true,
+  "engines":{"node":">=22.16.0 <23","npm":">=10.9.0 <11"},
+  "packageManager":"npm@10.9.2",
+  "scripts":{
+    "dev":"next dev",
+    "build":"next build",
+    "start":"next start",
+    "lint":"eslint .",
+    "typecheck":"tsc --noEmit",
+    "test":"node --test",
+    "verify:constitution":"node scripts/verify-constitution.mjs"
+  },
+  "dependencies":{
+    "next":"16.4.0",
+    "react":"19.3.0",
+    "react-dom":"19.3.0"
+  },
+  "devDependencies":{
+    "@types/node":"22.19.1",
+    "@types/react":"19.2.2",
+    "@types/react-dom":"19.2.2",
+    "@eslint/js":"10.0.1",
+    "eslint":"10.12.0",
+    "eslint-config-next":"16.4.0",
+    "typescript":"5.9.3"
+  }
+}
