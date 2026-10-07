@@ -1,3 +1,16 @@
-# Awtad Platform
+# أوتاد — Awtad HCM
 
-Enterprise HR/HCM foundation for Awtad.
+إعادة بناء نظيفة لمنصة أوتاد، وليست امتدادًا للكود السابق.
+
+## منهج التنفيذ
+1. تثبيت المتطلبات من مواصفات المشروع ومصادر موثوقة.
+2. بناء نواة المجال وقاعدة البيانات قبل التوسع في الواجهات.
+3. لا تُعتبر أي مرحلة مكتملة قبل اجتياز بوابة الجودة.
+4. فصل المنفذ فعليًا عن التكاملات التي تحتاج اعتمادًا أو خدمة خارجية.
+5. لا مفاتيح أو أسرار داخل المستودع.
+6. لا واجهات حكومية وهمية؛ التكاملات الحكومية عبر adapters قابلة للتحقق.
+
+## بوابة الجودة
+Source hygiene → dependency install → TypeScript → lint → unit/integration → migrations → production build → runtime health → API smoke → E2E → security.
+
+راجع `docs/architecture.md` و`docs/quality-gates.md` قبل إضافة وحدات جديدة.
