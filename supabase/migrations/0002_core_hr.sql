@@ -1,3 +1,13 @@
+create table if not exists organization_memberships (
+  user_id uuid not null references auth.users(id) on delete cascade,
+  organization_id uuid not null references organizations(id) on delete cascade,
+  role text not null default 'member',
+  active boolean not null default true,
+  created_at timestamptz not null default now(),
+  primary key(user_id,organization_id)
+);
+create index if not exists organization_memberships_org_idx on organization_memberships(organization_id,user_id);
+
 create table if not exists entities (
   id uuid primary key default gen_random_uuid(), organization_id uuid not null references organizations(id) on delete restrict,
   name text not null, code text not null, currency text not null default 'SAR',
@@ -73,6 +83,7 @@ create table if not exists employee_change_requests (
   reviewed_by uuid, reviewed_at timestamptz, created_at timestamptz not null default now()
 );
 
+alter table organization_memberships enable row level security;
 alter table entities enable row level security;
 alter table departments enable row level security;
 alter table locations enable row level security;
@@ -86,15 +97,17 @@ alter table manager_groups enable row level security;
 alter table manager_group_members enable row level security;
 alter table employee_change_requests enable row level security;
 
-create policy entities_org on entities for all to authenticated using (organization_id in (select id from organizations where id = entities.organization_id)) with check (organization_id in (select id from organizations where id = entities.organization_id));
+create policy organization_memberships_self on organization_memberships for select to authenticated using ((select auth.uid()) = user_id);
+create policy organization_memberships_admin on organization_memberships for all to authenticated using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
+create policy entities_org on entities for all to authenticated using (organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active)) with check (organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active));
 create policy departments_org on departments for all to authenticated using (entity_id in (select id from entities where entities.id=departments.entity_id)) with check (entity_id in (select id from entities where entities.id=departments.entity_id));
 create policy locations_org on locations for all to authenticated using (entity_id in (select id from entities where entities.id=locations.entity_id)) with check (entity_id in (select id from entities where entities.id=locations.entity_id));
 create policy positions_org on positions for all to authenticated using (entity_id in (select id from entities where entities.id=positions.entity_id)) with check (entity_id in (select id from entities where entities.id=positions.entity_id));
 create policy employee_assignments_org on employee_assignments for all to authenticated using (employee_id in (select id from employees where employees.id=employee_assignments.employee_id)) with check (employee_id in (select id from employees where employees.id=employee_assignments.employee_id));
-create policy manager_users_org on manager_users for all to authenticated using (organization_id in (select id from organizations where id=manager_users.organization_id)) with check (organization_id in (select id from organizations where id=manager_users.organization_id));
-create policy roles_org on roles for all to authenticated using (organization_id in (select id from organizations where id=roles.organization_id)) with check (organization_id in (select id from organizations where id=roles.organization_id));
-create policy role_permissions_access on role_permissions for all to authenticated using (true) with check (true);
-create policy user_roles_access on user_roles for all to authenticated using (true) with check (true);
-create policy manager_groups_org on manager_groups for all to authenticated using (organization_id in (select id from organizations where id=manager_groups.organization_id)) with check (organization_id in (select id from organizations where id=manager_groups.organization_id));
-create policy manager_group_members_access on manager_group_members for all to authenticated using (group_id in (select id from manager_groups where manager_groups.id=manager_group_members.group_id)) with check (group_id in (select id from manager_groups where manager_groups.id=manager_group_members.group_id));
-create policy employee_change_requests_org on employee_change_requests for all to authenticated using (organization_id in (select id from organizations where id=employee_change_requests.organization_id)) with check (organization_id in (select id from organizations where id=employee_change_requests.organization_id));
+create policy manager_users_org on manager_users for all to authenticated using (organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active)) with check (organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active));
+create policy roles_org on roles for all to authenticated using (organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active)) with check (organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active));
+create policy role_permissions_access on role_permissions for all to authenticated using (role_id in (select id from roles where organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active))) with check (role_id in (select id from roles where organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active)));
+create policy user_roles_access on user_roles for all to authenticated using (role_id in (select id from roles where organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active))) with check (role_id in (select id from roles where organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active)));
+create policy manager_groups_org on manager_groups for all to authenticated using (organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active)) with check (organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active));
+create policy manager_group_members_access on manager_group_members for all to authenticated using (group_id in (select id from manager_groups where organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active))) with check (group_id in (select id from manager_groups where organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active)));
+create policy employee_change_requests_org on employee_change_requests for all to authenticated using (organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active)) with check (organization_id in (select organization_id from organization_memberships where user_id=(select auth.uid()) and active));
