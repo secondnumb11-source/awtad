@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: "22.16.0"
           cache: npm
-      - name: Generate lockfile on first run
+      - name: Generate and persist lockfile if absent
         if: hashFiles('package-lock.json') == ''
         run: |
           npm install --package-lock-only --ignore-scripts
@@ -27,11 +27,8 @@ jobs:
           git add package-lock.json
           git commit -m "chore: pin phase-0 dependency lockfile"
           git push
-          echo "LOCKFILE_COMMITTED=true" >> "$GITHUB_ENV"
-      - name: Stop first run after lockfile commit
-        if: env.LOCKFILE_COMMITTED == 'true'
-        run: exit 0
-      - run: npm ci
+      - name: Install exact dependency graph
+        run: npm ci
       - run: npm run verify:constitution
       - run: npm run typecheck
       - run: npm run lint
