@@ -30,6 +30,7 @@ jobs:
       - name: Install exact dependency graph
         run: npm ci
       - run: npm run verify:constitution
+      - run: npm run verify:source
       - run: npm run typecheck
       - run: npm run lint
       - run: npm test
